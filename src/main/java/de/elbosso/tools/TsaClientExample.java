@@ -1,4 +1,7 @@
 package de.elbosso.tools;
+
+import java.io.IOException;
+
 /*
 Copyright (c) 2021.
 
@@ -35,8 +38,24 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
  */
 public class TsaClientExample extends java.lang.Object
 {
-	public static void main(java.lang.String[] args)
+	public static void main(java.lang.String[] args) throws IOException
 	{
-		System.out.println("Hi!");
+		de.elbosso.util.Utilities.configureBasicStdoutLogging(org.apache.log4j.Level.TRACE);
+		java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
+		java.io.File f=java.io.File.createTempFile("rfc3161test",".dat");
+		System.out.println(f);
+		f.deleteOnExit();
+		try
+		{
+			byte[] timestampQuery = TsaClientHelper.makeQuery(f.toURI().toURL(), true, "0.4.0.2023.1.1");
+			java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
+			byte[] timestampResponse= de.elbosso.util.security.TsaClientHelper.getResponse(timestampQuery,server);
+			//would throw exception if verification would fail!
+			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
+		}
+		catch(Throwable t)
+		{
+			t.printStackTrace();
+		}
 	}
 }
