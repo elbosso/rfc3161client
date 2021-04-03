@@ -39,9 +39,9 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
   <groupId>de.elbosso.tools</groupId>
   <artifactId>rfc3161client</artifactId>
   <version>1.0.0-SNAPSHOT</version>
-    <!--scm>
-        <developerConnection>scm:git:https://github.com/<user>/<project>.git</developerConnection>
-    </scm-->
+    <scm>
+        <developerConnection>scm:git:https://github.com/elbosso/rfc3161client.git</developerConnection>
+    </scm>
     <properties>
         <project.custom.encoding>UTF-8</project.custom.encoding>
         <project.custom.java.version>11</project.custom.java.version>
@@ -209,11 +209,11 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
         </dependency>
 
     </dependencies>
-    <!--distributionManagement>
+    <distributionManagement>
         <repository>
             <id>internal.repo</id>
             <name>Internal repo</name>
             <url>file:///tmp/</url>
         </repository>
-    </distributionManagement-->
+    </distributionManagement>
 </project>
