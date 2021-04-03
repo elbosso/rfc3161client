@@ -1,5 +1,6 @@
+package de.elbosso.tools;
 /*
-Copyright (c) 2012-2020.
+Copyright (c) 2021.
 
 Juergen Key. Alle Rechte vorbehalten.
 
@@ -32,7 +33,7 @@ UNERLAUBTE HANDLUNG (INKLUSIVE FAHRLAESSIGKEIT) VERANTWORTLICH, AUF WELCHEM
 WEG SIE AUCH IMMER DURCH DIE BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR,
 WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
  */
-public class Hello extends java.lang.Object
+public class TsaClientExample extends java.lang.Object
 {
 	public static void main(java.lang.String[] args)
 	{
