@@ -37,7 +37,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.elbosso.tools</groupId>
   <artifactId>rfc3161client</artifactId>
-  <version>1.0.0</version>
+  <version>1.0.0-SNAPSHOT</version>
     <scm>
         <developerConnection>scm:git:https://github.com/elbosso/rfc3161client.git</developerConnection>
       <tag>rfc3161client-1.0.0</tag>
@@ -185,7 +185,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
         <dependency>
             <groupId>de.elbosso</groupId>
             <artifactId>util</artifactId>
-            <version>1.3.0</version>
+            <version>1.3.0-SNAPSHOT</version>
 			<scope>compile</scope>
         </dependency>
 

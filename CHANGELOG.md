@@ -5,6 +5,11 @@ Changelog of this project.
 ## Unreleased
 ### No issue
 
+**releasemanagement preparations**
+
+
+[5cd14845e13d330](https://github.com/elbosso/rfc3161client/commit/5cd14845e13d330) Jürgen Key *2021-04-03 14:22:20*
+
 **example usage added**
 
 
