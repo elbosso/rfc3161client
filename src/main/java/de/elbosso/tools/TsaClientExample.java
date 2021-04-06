@@ -40,21 +40,48 @@ public class TsaClientExample extends java.lang.Object
 {
 	public static void main(java.lang.String[] args) throws IOException
 	{
-		de.elbosso.util.Utilities.configureBasicStdoutLogging(org.apache.log4j.Level.TRACE);
+		de.elbosso.util.Utilities.configureBasicStdoutLogging(org.apache.log4j.Level.ERROR);
 		java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		java.io.File f=java.io.File.createTempFile("rfc3161test",".dat");
+		java.io.PrintWriter pw=new java.io.PrintWriter(f);
+		pw.println("huhu");
+		pw.close();
+		java.io.File fi=java.io.File.createTempFile("rfc3161test_invalid",".dat");
+		pw=new java.io.PrintWriter(fi);
+		pw.println("hallo");
+		pw.close();
 		System.out.println(f);
 		f.deleteOnExit();
 		try
 		{
 			byte[] timestampQuery = TsaClientHelper.makeQuery(f.toURI().toURL(), true, "0.4.0.2023.1.1");
-			java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
+			//java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
+			java.lang.String server="http://timestamp.entrust.net/TSS/RFC3161sha2TS";
 			byte[] timestampResponse= de.elbosso.util.security.TsaClientHelper.getResponse(timestampQuery,server);
 			//would throw exception if verification would fail!
-			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
+
+			//The third parameter is only needed if the tsa certificate is issued ba a CA that is not
+			//yet in the JREs truststore - in that case, it holds the CAs the user deems trustworthy
+			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
+			//to check the timestamp and make it fail - just use a different file as input:
+			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
+
+			//so if you use a timestampingserver with a CA certificate already trusted by Java:
+			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse);
+			//to check the timestamp and make it fail - just use a different file as input:
+			//TsaClientHelper.verify(fi.toURI().toURL(),timestampResponse);
+
+			//of course, the method above may not be what you want because it tries to fetch all CRLs of all CAs
+			//in the JREs truststore - better because aof it being faster is to give the trusted root for the certificate
+			//used to do the signing shown here for the example entrust:
+			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL("https://web.entrust.com/root-certificates/entrust_2048_ca.cer"));
+			//to check the timestamp and make it fail - just use a different file as input:
+			//TsaClientHelper.verify(fi.toURI().toURL(),timestampResponse,new java.net.URL("https://web.entrust.com/root-certificates/entrust_2048_ca.cer"));
+
 		}
 		catch(Throwable t)
 		{
+			System.out.println("##error##");
 			t.printStackTrace();
 		}
 	}

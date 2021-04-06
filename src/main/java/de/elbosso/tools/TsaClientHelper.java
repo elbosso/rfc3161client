@@ -118,6 +118,10 @@ public class TsaClientHelper
 		byte[] timestamp = request.getEncoded();
 		return timestamp;
 	}
+	public static void verify(java.net.URL content, java.net.URL tsr) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
+	{
+		verify(content,tsr,null);
+	}
 	public static void verify(java.net.URL content, java.net.URL tsr,java.net.URL pemChainUrl) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
 	{
 		java.io.InputStream inputStream = tsr.openStream();
@@ -125,12 +129,20 @@ public class TsaClientHelper
 		inputStream.close();
 		verify(content,timeStampResponse,pemChainUrl);
 	}
+	public static void verify(java.net.URL content, byte[] tsr) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
+	{
+		verify(content,tsr,null);
+	}
 	public static void verify(java.net.URL content, byte[] tsr,java.net.URL pemChainUrl) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
 	{
 		java.io.InputStream inputStream = new java.io.ByteArrayInputStream(tsr);
 		org.bouncycastle.tsp.TimeStampResponse timeStampResponse = new org.bouncycastle.tsp.TimeStampResponse(inputStream);
 		inputStream.close();
 		verify(content,timeStampResponse,pemChainUrl);
+	}
+	public static void verify(java.net.URL content, TimeStampResponse tsr) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
+	{
+		verify(content,tsr,null);
 	}
 	public static void verify(java.net.URL content, TimeStampResponse tsr, java.net.URL pemChainUrl) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
 	{
@@ -232,8 +244,7 @@ public class TsaClientHelper
 		java.security.cert.CertPath certpath = cf.generateCertPath(tspCertificateChain);
 		java.security.cert.CertPathValidator validator = java.security.cert.CertPathValidator.getInstance("PKIX");
 //		java.security.KeyStore keystore = de.elbosso.util.security.Utilities.createKeystoreWithCacertsTrustedRoots();
-//		java.security.KeyStore keystore = de.elbosso.util.security.Utilities.createKeystoreWithJDKsTrustedRoots();
-		java.security.KeyStore keystore=de.elbosso.util.security.Utilities.readChainFromPem(pemChainUrl);
+		java.security.KeyStore keystore=pemChainUrl!=null?de.elbosso.util.security.Utilities.readChainFromPem(pemChainUrl):de.elbosso.util.security.Utilities.createKeystoreWithJDKsTrustedRoots();
 
 
 		java.util.Enumeration en = keystore.aliases();
