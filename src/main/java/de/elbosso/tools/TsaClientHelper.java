@@ -158,7 +158,7 @@ public class TsaClientHelper
 		byte[] out = digest.digest(in);
 		org.bouncycastle.tsp.TimeStampRequest tsq = generator.generate(timeStampToken.getTimeStampInfo().getMessageImprintAlgOID(), out, timeStampToken.getTimeStampInfo().getNonce());
 
-		TsaClientHelper.verify(tsq,tsr,pemChainUrl);
+		verify(tsq,tsr,pemChainUrl);
 	}
 
 	public static void verify(TimeStampRequest tsq, TimeStampResponse tsr, java.net.URL pemChainUrl) throws CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException, TSPException, OperatorCreationException
@@ -248,12 +248,15 @@ public class TsaClientHelper
 
 
 		java.util.Enumeration en = keystore.aliases();
-		while (en.hasMoreElements())
+		if(pemChainUrl!=null)
 		{
-			java.lang.String alias=en.nextElement().toString();
-			if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("keystore element: "
-					+ alias);
-			crls.addAll(de.elbosso.util.security.Utilities.getCRLs((X509Certificate)keystore.getCertificate(alias)));
+			while (en.hasMoreElements())
+			{
+				java.lang.String alias = en.nextElement().toString();
+				if (CLASS_LOGGER.isDebugEnabled()) CLASS_LOGGER.debug("keystore element: "
+						+ alias);
+				crls.addAll(de.elbosso.util.security.Utilities.getCRLs((X509Certificate) keystore.getCertificate(alias)));
+			}
 		}
 		// This class retrieves the most-trusted CAs from the keystore
 		java.security.cert.PKIXParameters params = new java.security.cert.PKIXParameters(keystore);
