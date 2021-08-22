@@ -3,7 +3,20 @@
 Changelog of this project.
 
 ## Unreleased
+### GitHub [#1](https://github.com/elbosso/rfc3161client/issues/1) Server returned HTTP response code: 403 for URL: http://timestamp.entrust.net/TSS/RFC3161sha2TS/chain.pem
+
+**re #1**
+
+
+[64ee5bc74e38987](https://github.com/elbosso/rfc3161client/commit/64ee5bc74e38987) Jürgen Key *2021-04-06 16:35:40*
+
+
 ### No issue
+
+**performance issue fixed**
+
+
+[e0458da6436c04f](https://github.com/elbosso/rfc3161client/commit/e0458da6436c04f) Jürgen Key *2021-04-07 04:27:45*
 
 **retracted release**
 
