@@ -146,7 +146,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
       </plugins>
     </build>
     <repositories>
-        <repository>
+        <!--repository>
             <releases>
                 <enabled>true</enabled>
                 <updatePolicy>always</updatePolicy>
@@ -167,6 +167,11 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
             <name>Juergen Key</name>
             <url>https://elbosso.github.io/maven2-releases</url>
             <layout>default</layout>
+        </repository-->
+        <repository>
+            <id>repsy</id>
+            <name>Maven Repository on Repsy</name>
+            <url>https://repo.repsy.io/mvn/elbosso/default</url>
         </repository>
         <repository>
             <id>central</id>
@@ -185,7 +190,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
         <dependency>
             <groupId>de.elbosso</groupId>
             <artifactId>util</artifactId>
-            <version>1.3.0-SNAPSHOT</version>
+            <version>1.3.0</version>
 			<scope>compile</scope>
         </dependency>
 
