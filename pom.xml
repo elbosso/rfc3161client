@@ -170,7 +170,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
         </repository-->
         <repository>
             <id>repsy</id>
-            <name>Maven Repository on Repsy</name>
+            <name>EL BOSSOs (https://elbosso.github.io/index.html) Maven Repository on Repsy</name>
             <url>https://repo.repsy.io/mvn/elbosso/default</url>
         </repository>
         <repository>
