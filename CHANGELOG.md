@@ -18,6 +18,16 @@ Changelog of this project.
 
 ### No issue
 
+**change of repository location for de.elbosso artifacts**
+
+
+[68793a430dd72b7](https://github.com/elbosso/rfc3161client/commit/68793a430dd72b7) Jürgen Key *2021-09-12 08:36:27*
+
+**new repoitory location fpr artifacts based at de.elbosso: https://panel.repsy.io/repo/maven/elbosso/default**
+
+
+[02033d068431976](https://github.com/elbosso/rfc3161client/commit/02033d068431976) Jürgen Key *2021-08-28 12:38:17*
+
 **performance issue fixed**
 
 

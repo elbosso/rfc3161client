@@ -1,5 +1,7 @@
 package de.elbosso.tools;
 
+import ch.qos.logback.classic.Level;
+
 import java.io.IOException;
 
 /*
@@ -40,7 +42,7 @@ public class TsaClientExample extends java.lang.Object
 {
 	public static void main(java.lang.String[] args) throws IOException
 	{
-		de.elbosso.util.Utilities.configureBasicStdoutLogging(org.apache.log4j.Level.ERROR);
+		de.elbosso.util.Utilities.configureBasicStdoutLogging(Level.ERROR);
 		java.security.Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
 		java.io.File f=java.io.File.createTempFile("rfc3161test",".dat");
 		java.io.PrintWriter pw=new java.io.PrintWriter(f);

@@ -53,7 +53,7 @@ import java.security.cert.X509Certificate;
 
 public class TsaClientHelper
 {
-	private final static org.apache.log4j.Logger CLASS_LOGGER = org.apache.log4j.Logger.getLogger(TsaClientHelper.class);
+	private final static org.slf4j.Logger CLASS_LOGGER = org.slf4j.LoggerFactory.getLogger(TsaClientHelper.class);
 
 	private TsaClientHelper()
 	{
@@ -263,7 +263,7 @@ public class TsaClientHelper
 		java.security.cert.CertStoreParameters revoked = new java.security.cert.CollectionCertStoreParameters(crls);
 		params.addCertStore(java.security.cert.CertStore.getInstance("Collection", revoked));
 		params.setRevocationEnabled(true);
-		CLASS_LOGGER.debug(params.isRevocationEnabled());
+		CLASS_LOGGER.debug(java.lang.Boolean.toString(params.isRevocationEnabled()));
 		try
 		{
 			validator.validate(certpath, params);
