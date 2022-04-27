@@ -16,6 +16,14 @@ Changelog of this project.
 [64ee5bc74e38987](https://github.com/elbosso/rfc3161client/commit/64ee5bc74e38987) Jürgen Key *2021-04-06 16:35:40*
 
 
+### GitHub [#2](https://github.com/elbosso/rfc3161client/issues/2) get rid of log4j and use the new bom dependency
+
+**re #2**
+
+
+[2ed59204794620e](https://github.com/elbosso/rfc3161client/commit/2ed59204794620e) Juergen Key *2022-04-27 16:02:59*
+
+
 ### No issue
 
 **change of repository location for de.elbosso artifacts**
