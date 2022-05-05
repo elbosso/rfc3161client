@@ -48,7 +48,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
         <project.build.sourceEncoding>${project.custom.encoding}</project.build.sourceEncoding>
         <project.build.outputEncoding>${project.custom.encoding}</project.build.outputEncoding>
         <project.reporting.outputEncoding>${project.custom.encoding}</project.reporting.outputEncoding>
-        <project.main.class>Hello</project.main.class>
+        <project.main.class>de.elbosso.tools.TsaClientExample</project.main.class>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <project.scm.id>elbossos-github</project.scm.id>
@@ -77,6 +77,7 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
+                    <version>3.3.0</version>
                     <configuration>
                         <archive>
                             <manifest>

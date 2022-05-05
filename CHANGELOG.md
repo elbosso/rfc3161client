@@ -3,6 +3,15 @@
 Changelog of this project.
 
 ## Unreleased
+### GitHub [#2](https://github.com/elbosso/rfc3161client/issues/2) get rid of log4j and use the new bom dependency
+
+**fixes #2**
+
+
+[2a58ab1553cba04](https://github.com/elbosso/rfc3161client/commit/2a58ab1553cba04) Juergen Key *2022-04-27 16:05:08*
+
+
+## 1.0.0
 ### GitHub [#1](https://github.com/elbosso/rfc3161client/issues/1) Server returned HTTP response code: 403 for URL: http://timestamp.entrust.net/TSS/RFC3161sha2TS/chain.pem
 
 **housekeeping, re #1**
