@@ -57,8 +57,8 @@ public class TsaClientExample extends java.lang.Object
 		try
 		{
 			byte[] timestampQuery = TsaClientHelper.makeQuery(f.toURI().toURL(), true, "0.4.0.2023.1.1");
-			//java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
-			java.lang.String server="http://timestamp.entrust.net/TSS/RFC3161sha2TS";
+			java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
+			//java.lang.String server="http://timestamp.entrust.net/TSS/RFC3161sha2TS";
 			//java.lang.String server="https://freetsa.org/tsr";
 			byte[] timestampResponse= de.elbosso.util.security.TsaClientHelper.getResponse(timestampQuery,server);
 			//would throw exception if verification would fail!
@@ -70,14 +70,14 @@ public class TsaClientExample extends java.lang.Object
 			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
 
 			//so if you use a timestampingserver with a CA certificate already trusted by Java:
-			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse);
+			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse);
 			//to check the timestamp and make it fail - just use a different file as input:
 			//TsaClientHelper.verify(fi.toURI().toURL(),timestampResponse);
 
 			//of course, the method above may not be what you want because it tries to fetch all CRLs of all CAs
 			//in the JREs truststore - better because aof it being faster is to give the trusted root for the certificate
 			//used to do the signing shown here for the example entrust:
-			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL("https://web.entrust.com/root-certificates/entrust_2048_ca.cer"));
+			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL("https://web.entrust.com/root-certificates/entrust_2048_ca.cer"));
 			//to check the timestamp and make it fail - just use a different file as input:
 			//TsaClientHelper.verify(fi.toURI().toURL(),timestampResponse,new java.net.URL("https://web.entrust.com/root-certificates/entrust_2048_ca.cer"));
 

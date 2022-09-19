@@ -38,11 +38,14 @@ WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
 import de.elbosso.util.Utilities;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
+import org.bouncycastle.cert.X509CRLHolder;
 import org.bouncycastle.operator.OperatorCreationException;
 import org.bouncycastle.tsp.TSPAlgorithms;
 import org.bouncycastle.tsp.TSPException;
 import org.bouncycastle.tsp.TimeStampRequest;
 import org.bouncycastle.tsp.TimeStampResponse;
+import org.bouncycastle.util.Selector;
+import org.bouncycastle.util.Store;
 
 import java.io.IOException;
 import java.math.BigInteger;
@@ -147,12 +150,24 @@ public class TsaClientHelper
 	}
 	public static void verify(java.net.URL content, TimeStampResponse tsr, java.net.URL pemChainUrl) throws java.io.IOException, org.bouncycastle.tsp.TSPException, java.security.cert.CertificateException, java.security.NoSuchAlgorithmException, java.security.InvalidAlgorithmParameterException, java.security.KeyStoreException, org.bouncycastle.operator.OperatorCreationException
 	{
+		if ((0 != tsr.getStatus())&&(1 != tsr.getStatus()))
+		{
+			if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("status: " + tsr.getStatus());
+			if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("status string: " + tsr.getStatusString());
+			org.bouncycastle.asn1.cmp.PKIFailureInfo failInfo = tsr.getFailInfo();
+			if (null != failInfo)
+			{
+				if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("fail info int value: " + failInfo.intValue());
+				if (org.bouncycastle.asn1.cmp.PKIFailureInfo.unacceptedPolicy == failInfo.intValue())
+				{
+					if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("unaccepted policy");
+				}
+			}
+			throw new org.bouncycastle.tsp.TSPException("timestamp response status != 0: "
+					+ tsr.getStatus()+" ("+tsr.getStatusString()+")");
+		}
 		// TSP response parsing and validation
 		org.bouncycastle.tsp.TimeStampToken timeStampToken = tsr.getTimeStampToken();
-		if(timeStampToken==null)
-		{
-			throw new org.bouncycastle.tsp.TSPException("Status in response: "+tsr.getStatus()+" ("+tsr.getStatusString()+")");
-		}
 		org.bouncycastle.tsp.TimeStampRequestGenerator generator = new org.bouncycastle.tsp.TimeStampRequestGenerator();
 		generator.setReqPolicy(timeStampToken.getTimeStampInfo().getPolicy());
 		java.io.InputStream is = content.openStream();
@@ -168,7 +183,7 @@ public class TsaClientHelper
 
 	public static void verify(TimeStampRequest tsq, TimeStampResponse tsr, java.net.URL pemChainUrl) throws CertificateException, IOException, NoSuchAlgorithmException, KeyStoreException, InvalidAlgorithmParameterException, TSPException, OperatorCreationException
 	{
-		if (0 != tsr.getStatus())
+		if ((0 != tsr.getStatus())&&(1 != tsr.getStatus()))
 		{
 			if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("status: " + tsr.getStatus());
 			if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("status string: " + tsr.getStatusString());
@@ -181,9 +196,10 @@ public class TsaClientHelper
 					if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("unaccepted policy");
 				}
 			}
-			throw new RuntimeException("timestamp response status != 0: "
-					+ tsr.getStatus());
+			throw new org.bouncycastle.tsp.TSPException("timestamp response status != 0: "
+					+ tsr.getStatus()+" ("+tsr.getStatusString()+")");
 		}
+		System.out.println("policy "+tsr.getTimeStampToken().getTimeStampInfo().getPolicy());
 		org.bouncycastle.tsp.TimeStampToken timeStampToken = tsr.getTimeStampToken();
 		org.bouncycastle.cms.SignerId signerId = timeStampToken.getSID();
 		java.math.BigInteger signerCertSerialNumber = signerId.getSerialNumber();
@@ -268,6 +284,7 @@ public class TsaClientHelper
 				crls.addAll(de.elbosso.util.security.Utilities.getCRLs((X509Certificate) keystore.getCertificate(alias)));
 			}
 		}
+
 		// This class retrieves the most-trusted CAs from the keystore
 		java.security.cert.PKIXParameters params = new java.security.cert.PKIXParameters(keystore);
 		java.security.cert.CertStoreParameters revoked = new java.security.cert.CollectionCertStoreParameters(crls);
