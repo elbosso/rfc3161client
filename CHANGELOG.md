@@ -19,6 +19,14 @@ Changelog of this project.
 [268b948f0c9ad1d](https://github.com/elbosso/rfc3161client/commit/268b948f0c9ad1d) Juergen Key *2022-05-05 17:32:36*
 
 
+### No issue
+
+**verification now works when no url to download the chain is given but all chain certificates are contained in the response**
+
+
+[fac9872c205a6e1](https://github.com/elbosso/rfc3161client/commit/fac9872c205a6e1) Jürgen Key *2022-09-19 06:35:29*
+
+
 ## 1.0.0
 ### GitHub [#1](https://github.com/elbosso/rfc3161client/issues/1) Server returned HTTP response code: 403 for URL: http://timestamp.entrust.net/TSS/RFC3161sha2TS/chain.pem
 

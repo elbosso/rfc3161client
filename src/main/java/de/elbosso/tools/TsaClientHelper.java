@@ -96,7 +96,8 @@ public class TsaClientHelper
 	public static byte[] makeQuery(java.net.URL content, boolean includeCertificate, java.lang.String policyOID) throws IOException, NoSuchAlgorithmException
 	{
 		org.bouncycastle.tsp.TimeStampRequestGenerator generator = new org.bouncycastle.tsp.TimeStampRequestGenerator();
-		generator.setReqPolicy(new ASN1ObjectIdentifier(policyOID));
+		if(policyOID!=null)
+			generator.setReqPolicy(new ASN1ObjectIdentifier(policyOID));
 		generator.setCertReq(includeCertificate);
 		java.io.InputStream is = content.openStream();
 		java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream();
@@ -148,6 +149,10 @@ public class TsaClientHelper
 	{
 		// TSP response parsing and validation
 		org.bouncycastle.tsp.TimeStampToken timeStampToken = tsr.getTimeStampToken();
+		if(timeStampToken==null)
+		{
+			throw new org.bouncycastle.tsp.TSPException("Status in response: "+tsr.getStatus()+" ("+tsr.getStatusString()+")");
+		}
 		org.bouncycastle.tsp.TimeStampRequestGenerator generator = new org.bouncycastle.tsp.TimeStampRequestGenerator();
 		generator.setReqPolicy(timeStampToken.getTimeStampInfo().getPolicy());
 		java.io.InputStream is = content.openStream();
