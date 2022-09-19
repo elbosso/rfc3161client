@@ -246,6 +246,11 @@ public class TsaClientHelper
 //		java.security.KeyStore keystore = de.elbosso.util.security.Utilities.createKeystoreWithCacertsTrustedRoots();
 		java.security.KeyStore keystore=pemChainUrl!=null?de.elbosso.util.security.Utilities.readChainFromPem(pemChainUrl):de.elbosso.util.security.Utilities.createKeystoreWithJDKsTrustedRoots();
 
+		if(pemChainUrl==null)
+		{
+			for(java.security.cert.X509Certificate chainCert:tspCertificateChain)
+				keystore.setCertificateEntry(Utilities.formatHexDump(de.elbosso.util.security.Utilities.getSubjectKeyId(chainCert)),chainCert);
+		}
 
 		java.util.Enumeration en = keystore.aliases();
 		if(pemChainUrl!=null)
