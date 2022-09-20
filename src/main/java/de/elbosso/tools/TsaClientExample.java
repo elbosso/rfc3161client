@@ -1,6 +1,6 @@
 package de.elbosso.tools;
 
-import ch.qos.logback.classic.Level;
+import org.slf4j.event.Level;
 
 import java.io.IOException;
 

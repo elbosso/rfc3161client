@@ -35,7 +35,7 @@ WEG SIE AUCH IMMER DURCH DIE BENUTZUNG DIESER SOFTWARE ENTSTANDEN SIND, SOGAR,
 WENN SIE AUF DIE MOEGLICHKEIT EINES SOLCHEN SCHADENS HINGEWIESEN WORDEN SIND.
  */
 
-import de.elbosso.util.Utilities;
+import de.elbosso.util.io.Utilities;
 import org.bouncycastle.asn1.ASN1ObjectIdentifier;
 import org.bouncycastle.asn1.x500.X500Name;
 import org.bouncycastle.cert.X509CRLHolder;
@@ -47,6 +47,7 @@ import org.bouncycastle.tsp.TimeStampResponse;
 import org.bouncycastle.util.Selector;
 import org.bouncycastle.util.Store;
 
+import javax.security.auth.x500.X500Principal;
 import java.io.IOException;
 import java.math.BigInteger;
 import java.security.*;
@@ -77,7 +78,7 @@ public class TsaClientHelper
 		java.io.OutputStream out;
 		out = con.getOutputStream();
 		java.io.ByteArrayInputStream bais=new java.io.ByteArrayInputStream(timestampQuery);
-		de.elbosso.util.Utilities.copyBetweenStreams(bais,out,false);
+		de.elbosso.util.io.Utilities.copyBetweenStreams(bais,out,false);
 		bais.close();
 		if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("TS request sent");
 
@@ -92,7 +93,7 @@ public class TsaClientHelper
 		// accept the answer
 		in = con.getInputStream();
 		java.io.ByteArrayOutputStream baos=new java.io.ByteArrayOutputStream();
-		de.elbosso.util.Utilities.copyBetweenStreams(in,baos,false);
+		de.elbosso.util.io.Utilities.copyBetweenStreams(in,baos,false);
 		baos.close();
 		return baos.toByteArray();
 	}
@@ -199,7 +200,7 @@ public class TsaClientHelper
 			throw new org.bouncycastle.tsp.TSPException("timestamp response status != 0: "
 					+ tsr.getStatus()+" ("+tsr.getStatusString()+")");
 		}
-		System.out.println("policy "+tsr.getTimeStampToken().getTimeStampInfo().getPolicy());
+		if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("policy "+tsr.getTimeStampToken().getTimeStampInfo().getPolicy());
 		org.bouncycastle.tsp.TimeStampToken timeStampToken = tsr.getTimeStampToken();
 		org.bouncycastle.cms.SignerId signerId = timeStampToken.getSID();
 		java.math.BigInteger signerCertSerialNumber = signerId.getSerialNumber();
@@ -218,7 +219,7 @@ public class TsaClientHelper
 		{
 			java.security.cert.X509Certificate x509Certificate = new org.bouncycastle.cert.jcajce.JcaX509CertificateConverter().setProvider(org.bouncycastle.jce.provider.BouncyCastleProvider.PROVIDER_NAME)
 					.getCertificate(ch);
-			String ski = Utilities.formatHexDump(de.elbosso.util.security.Utilities.getSubjectKeyId(x509Certificate));
+			String ski = de.elbosso.util.Utilities.formatHexDump(de.elbosso.util.security.Utilities.getSubjectKeyId(x509Certificate));
 			certificateMap.put(ski, x509Certificate);
 			if (signerCertIssuer.equals(ch
 					.getIssuer())
@@ -257,8 +258,39 @@ public class TsaClientHelper
 			{
 				break;
 			}
-			String aki = Utilities.formatHexDump(de.elbosso.util.security.Utilities.getAuthorityKeyId(certificate));
+			String aki = de.elbosso.util.Utilities.formatHexDump(de.elbosso.util.security.Utilities.getAuthorityKeyId(certificate));
+			X500Principal issuer=certificate.getIssuerX500Principal();
+			java.util.List<java.lang.String> authorityInfoURIs=de.elbosso.util.security.Utilities.getAuthorityInfoAccess(certificate);
 			certificate = certificateMap.get(aki);
+			if(certificate==null)
+			{
+				CLASS_LOGGER.debug("did not find certificate for: "+issuer+" ("
+						+ aki+"} in available certificates");
+				CLASS_LOGGER.debug(java.util.Objects.toString(authorityInfoURIs));
+				for(java.lang.String authorityInfoURI:authorityInfoURIs)
+				{
+					try
+					{
+						java.net.URL pemUrl = new java.net.URI(authorityInfoURI).toURL();
+						CLASS_LOGGER.debug("Trying to load certificate for {} from {}",issuer,pemUrl);
+						java.io.InputStream is = pemUrl.openStream();
+						java.io.InputStream caInput = new java.io.BufferedInputStream(is);
+						java.util.Collection<? extends java.security.cert.Certificate> certs = cf.generateCertificates(caInput);
+						caInput.close();
+						if(certs.isEmpty()==false)
+						{
+							certificate=(X509Certificate) certs.iterator().next();
+							CLASS_LOGGER.debug("Loaded certificate for {}",certificate.getSubjectX500Principal());
+							crls.addAll(de.elbosso.util.security.Utilities.getCRLs(certificate));
+							CLASS_LOGGER.debug("Loaded CRL(s) for {}",certificate.getSubjectX500Principal());
+						}
+					}
+					catch(java.net.URISyntaxException exp)
+					{
+						CLASS_LOGGER.warn(exp.getMessage(),exp);
+					}
+				}
+			}
 		}
 		while (null != certificate);
 		javax.net.ssl.TrustManagerFactory factory = javax.net.ssl.TrustManagerFactory.getInstance("PKIX");
@@ -270,7 +302,7 @@ public class TsaClientHelper
 		if(pemChainUrl==null)
 		{
 			for(java.security.cert.X509Certificate chainCert:tspCertificateChain)
-				keystore.setCertificateEntry(Utilities.formatHexDump(de.elbosso.util.security.Utilities.getSubjectKeyId(chainCert)),chainCert);
+				keystore.setCertificateEntry(de.elbosso.util.Utilities.formatHexDump(de.elbosso.util.security.Utilities.getSubjectKeyId(chainCert)),chainCert);
 		}
 
 		java.util.Enumeration en = keystore.aliases();
@@ -313,9 +345,9 @@ public class TsaClientHelper
 		if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("time-stamp message imprint algorithm OID: "
 				+ timeStampToken.getTimeStampInfo().getMessageImprintAlgOID());
 		if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("message imprint digest: "
-				+ Utilities.formatHexDump(timeStampToken.getTimeStampInfo().getMessageImprintDigest()));
+				+ de.elbosso.util.Utilities.formatHexDump(timeStampToken.getTimeStampInfo().getMessageImprintDigest()));
 		if(CLASS_LOGGER.isDebugEnabled())CLASS_LOGGER.debug("request message imprint digest: "
-				+ Utilities.formatHexDump(tsq.getMessageImprintDigest()));
+				+ de.elbosso.util.Utilities.formatHexDump(tsq.getMessageImprintDigest()));
 		tsr.validate(tsq);
 	}
 

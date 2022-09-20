@@ -25,6 +25,12 @@ Changelog of this project.
 
 * added possibility to send request with unspecified policy
 
+[f4755709831de0f](https://github.com/elbosso/rfc3161client/commit/f4755709831de0f) Jürgen Key *2022-09-19 08:33:22*
+
+**error management improved,**
+
+* added possibility to send request with unspecified policy
+
 [deeb0158ab796c9](https://github.com/elbosso/rfc3161client/commit/deeb0158ab796c9) Jürgen Key *2022-09-19 06:56:35*
 
 **verification now works when no url to download the chain is given but all chain certificates are contained in the response**
