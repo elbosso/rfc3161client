@@ -56,7 +56,7 @@ public class TsaClientExample extends java.lang.Object
 		f.deleteOnExit();
 		try
 		{
-			byte[] timestampQuery = TsaClientHelper.makeQuery(f.toURI().toURL(), true, "0.4.0.2023.1.1");
+			byte[] timestampQuery = de.elbosso.util.security.TsaClientHelper.makeQuery(f.toURI().toURL(), true, "0.4.0.2023.1.1");
 			java.lang.String server="http://rfc3161timestampingserver.pi-docker.lab";
 			//java.lang.String server="http://timestamp.entrust.net/TSS/RFC3161sha2TS";
 			//java.lang.String server="https://freetsa.org/tsr";
@@ -70,7 +70,7 @@ public class TsaClientExample extends java.lang.Object
 			//TsaClientHelper.verify(f.toURI().toURL(),timestampResponse,new java.net.URL(server+"/chain.pem"));
 
 			//so if you use a timestampingserver with a CA certificate already trusted by Java:
-			TsaClientHelper.verify(f.toURI().toURL(),timestampResponse);
+			de.elbosso.util.security.TsaClientHelper.verify(f.toURI().toURL(),timestampResponse);
 			//to check the timestamp and make it fail - just use a different file as input:
 			//TsaClientHelper.verify(fi.toURI().toURL(),timestampResponse);
 
